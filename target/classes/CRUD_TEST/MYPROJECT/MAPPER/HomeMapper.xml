@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TEST.MYPROJECT.FIGHTING.Dao.HomeDao">
+
+	<insert id="test_write" parameterType="test" useGeneratedKeys="true"
+		keyProperty="test_code">
+		insert into test_post(test_code,test_title,test_contents)
+		values
+		(#{test_code},#{test_title},#{test_contents})
+		<selectKey keyProperty="test_code" resultType="int" order="BEFORE">
+			SELECT test_seq.NEXTVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<select id="test" resultType="test">
+		select * from test_post
+	</select>
+	<select id="select_test_post" resultType="test">
+				<![CDATA[
+		SELECT *FROM 
+		( SELECT  ROWNUM RN, test_post.* 
+		FROM ( 
+		select * from test_post 
+		ORDER BY TEST_CODE DESC )
+		test_post WHERE ROWNUM<=#{pageNum}*10) 
+WHERE RN>=#{pageNum}*10-9
+		]]>
+	</select>
+	<select id="select_read_page" parameterType="String" resultType="test">
+		select * from test_post where test_code =#{test_code}
+	</select>
+	<update id="test_update_contents">
+		UPDATE test_post
+		SET
+		test_title = #{test_title} ,
+		test_contents = #{test_contents}
+		WHERE
+		test_code = #{test_code}
+	</update>
+	<delete id="test_delete">
+	delete from test_post
+	where test_code = #{test_code}
+	</delete>
+	<select id="getBoardCount" resultType="int">
+	SELECT COUNT(*) FROM TEST_POST
+	</select>
+</mapper>
+
+
+
+
+
+  
